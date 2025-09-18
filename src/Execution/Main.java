@@ -93,15 +93,17 @@ public class Main {
                 11. Exit""");
     }
 
-    private static double validDoubleInput(){
+    private static double validDoubleInput(boolean zero){
         Scanner s1 = new Scanner(System.in);
         double value = 0;
+        double threshold = 0;
+        if(zero)threshold = -0.00001;
         while (true) {
             sleep();
             try {
                 value = s1.nextDouble();
                 s1.nextLine();
-                if(value > 0){
+                if(value > threshold){
                     return value;
                 }
                 else{
@@ -202,7 +204,7 @@ public class Main {
 
             case "Airplane":
                 if (print) System.out.println("Enter Number of Wheels: ");
-                double maxAltitude = validDoubleInput();
+                double maxAltitude = validDoubleInput(false);
                 return new Airplane(id, model, maxSpeed, currentMileage, maxAltitude);
 
             case "CargoShip":
@@ -331,9 +333,9 @@ public class Main {
                     System.out.println("Enter Vehicle Model: ");
                     String vModel = getValidStringInput();
                     System.out.println("Enter Vehicle Max Speed: ");
-                    double vMaxSpeed = validDoubleInput();
+                    double vMaxSpeed = validDoubleInput(false);
                     System.out.println("Enter Vehicle Mileage: ");
-                    double vCurrentMilage = validDoubleInput();
+                    double vCurrentMilage = validDoubleInput(true);
 
                     Vehicle newVehicle = createVehicleInstance(T, vID, vModel, vMaxSpeed, vCurrentMilage, true);
 
@@ -351,13 +353,13 @@ public class Main {
                 case 3:
                     System.out.println("\nEnter distance to travel (+ve only)");
 
-                    double distance  = validDoubleInput();
+                    double distance  = validDoubleInput(false);
                     moveAllWithChecks(f1, distance);
                     break;
 
                 case 4:
                     System.out.println("\nEnter amount of fuel to refuel (+ve only)");
-                    double fuel  = validDoubleInput();
+                    double fuel  = validDoubleInput(false);
                     refuelWithChecks(f1, fuel);
                     break;
 
