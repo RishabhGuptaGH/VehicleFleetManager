@@ -3,6 +3,18 @@
 ## Project Overview
 This project is a console-based application built in Java to simulate a vehicle fleet management system. It showcases fundamental Object-Oriented Programming (OOP) concepts such as **inheritance**, **polymorphism**, and **abstraction**. The system allows for managing various types of vehicles, including land, water, and air vehicles, each with unique functionalities.
 
+## Core OOP Principles
+The code is structured to demonstrate several key object-oriented programming (OOP) principles:
+
+* **Inheritance:** A multi-level class hierarchy is used, starting with the abstract Vehicle class. LandVehicle, AirVehicle, and WaterVehicle extend Vehicle, while concrete classes like Car and Truck extend LandVehicle. This structure allows for code reuse and a clear organizational model.
+
+* **Polymorphism:** The system leverages polymorphism extensively. For example, the FleetManager's startAllJourneys() method can call the move() method on any Vehicle object in the fleet, and Java's dynamic method dispatch ensures that the correct, type-specific move() implementation is executed (e.g., "Driving on road..." for a Car, "Flying at..." for an Airplane).
+
+* **Abstract Classes:** The Vehicle, LandVehicle, AirVehicle, and WaterVehicle classes are abstract. They define a common structure and behavior for all vehicles but leave specific implementations (like move() and calculateFuelEfficiency()) to their concrete subclasses.
+
+* **Interfaces:** Interfaces like FuelConsumable, CargoCarrier, PassengerCarrier, and Maintainable are used to define modular behaviors. A class can implement multiple interfaces, allowing for a flexible design where, for example, a Bus can be both a PassengerCarrier and a CargoCarrier.
+
+
 ## Features
 * **Add/Remove Vehicles:** Add different types of vehicles (e.g., Cars, Trucks, Airplanes) to the fleet.
 * **Refueling & Maintenance:** Manage fuel levels for all vehicles and perform maintenance on them.
@@ -21,10 +33,18 @@ The following UML diagram illustrates the class structure and relationships with
     git clone https://github.com/RishabhGuptaGH/VehicleFleetManager.git
     ```
 
-2.  ### Using Visual Studio Code (VS Code)
-    1.  **Open the project folder:** In VS Code, go to `File` > `Open Folder...` and select your main project directory, `ASSIGNMENT1`.
-    2.  **Ensure the Java Extension Pack is installed:** VS Code should prompt you to install it if you don't have it.
-    3.  **Run the main class:** Navigate to `src/Execution/Main.java`. You should see a green "Run" button at the top of the file or next to the `main` method. Click it to run your program.
+2.  ### Navigate and Compile
+    Move into the project directory and compile all Java files:
+    ```bash
+    cd VehicleFleetManager
+    javac -d bin -sourcepath src src\Execution\Main.java
+    ```
+    
+
+3. ### Run the Program:
+    ```bash
+    java -cp bin Execution.Main
+    ```
 
 3.  ### Using IntelliJ IDEA
     1.  **Open the project:** In IntelliJ, go to `File` > `Open...` and select the `ASSIGNMENT1` folder. IntelliJ will automatically detect the project structure and configure it for you.
