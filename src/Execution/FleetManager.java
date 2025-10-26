@@ -8,40 +8,62 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 
 public class FleetManager {
     private ArrayList<Vehicle> fleet;
+    private TreeSet<String> vidSet;
+    private TreeSet<String> modelSet;
 
     public FleetManager(){
 
         fleet = new ArrayList<>();
+        vidSet = new TreeSet<>();
+        modelSet = new TreeSet<>();
     }
 
     public void addVehicle(Vehicle v1)throws InvalidOperationException{
-        boolean found = false;
-        for(Vehicle tempVehicle: fleet){
-            if(tempVehicle.getId().equals(v1.getId())){
+        for(String tempId: vidSet){
+            if(tempId.equals(v1.getId())){
                 throw new InvalidOperationException("Vehicle with same ID exists.");
             }
         }
-        if(!found){
-            fleet.add(v1);
-        }
+        
+        fleet.add(v1);
+        vidSet.add(v1.getId());
+        modelSet.add(v1.getModel());
     }
 
+
     public void removeVehicle(String ID)throws InvalidOperationException{
-        boolean removed = false;
+        boolean removed = false, valid = true;
+        String model = "";
+
         for (Vehicle tempVehicle: fleet){
             if(tempVehicle.getId().equals(ID)){
                 fleet.remove(tempVehicle);
+                vidSet.remove(tempVehicle.getId());
+                model = tempVehicle.getModel();
                 removed = true;
                 break;
-            }
+            }            
         }
-
+        
         if(!removed)throw new InvalidOperationException("Vehicle not Found.");
+
+        else{
+            for(Vehicle tempVehicle: fleet){
+                if(tempVehicle.getModel().equals(model)){
+                    valid = false;
+                    break;
+                }
+            }
+            if(valid)modelSet.remove(model);
+        }
     }
 
     public void startAllJourney(double distance)throws InvalidOperationException,InsufficientFuelException{
@@ -135,10 +157,6 @@ public class FleetManager {
         return v1;
     }
 
-    public void sortFleetByEfficiency(){
-        fleet.sort((v1, v2) -> Double.compare(v2.calculateFuelEfficiency(), v1.calculateFuelEfficiency()));
-    }
-
     public List<Vehicle> getVehicleNeedingMaintenance(){
         ArrayList<Vehicle> v1 = new ArrayList<Vehicle>();
 
@@ -167,22 +185,16 @@ public class FleetManager {
         report.append("Total Vehicles: ").append(totalVehicles).append("\n");
         report.append("---------------------------\n");
 
-        int carCount = 0, busCount = 0, truckCount = 0, airplaneCount = 0, cargoShipCount = 0;
         double totalMileage = 0;
-        for (Vehicle vehicle : fleet) {
-            totalMileage += vehicle.getCurrentMilage();
-            if (vehicle instanceof Car) carCount++;
-            else if (vehicle instanceof Bus) busCount++;
-            else if (vehicle instanceof Truck) truckCount++;
-            else if (vehicle instanceof Airplane) airplaneCount++;
-            else if (vehicle instanceof CargoShip) cargoShipCount++;
+
+        report.append("Distinct Models present:\n");
+
+        int count = 0;
+        for(String tempModel: modelSet){
+            count++;
+            report.append("  - " + tempModel + "\n");
         }
-        report.append("Vehicle Count by Type:\n");
-        report.append("  - Cars: ").append(carCount).append("\n");
-        report.append("  - Buses: ").append(busCount).append("\n");
-        report.append("  - Trucks: ").append(truckCount).append("\n");
-        report.append("  - Airplanes: ").append(airplaneCount).append("\n");
-        report.append("  - Cargo Ships: ").append(cargoShipCount).append("\n");
+        report.append("Total Unique Models: " + count + "\n");
         report.append("---------------------------\n");
 
         double totalEfficiency = 0;
@@ -193,6 +205,13 @@ public class FleetManager {
                 fuelVehicleCount++;
             }
         }
+
+        report.append("Vehicle with Max Speed:" + this.getVehicleWithMaxSpeed().getMaxSpeed() + "\n");
+        report.append("---------------------------\n");
+
+        report.append("Vehicle with Min Speed:" + this.getVehicleWithMinSpeed().getMaxSpeed() + "\n");
+        report.append("---------------------------\n");
+
         double averageEfficiency = (fuelVehicleCount > 0) ? (totalEfficiency / fuelVehicleCount) : 0;
         report.append(String.format("Average Fuel Efficiency: %.2f km/unit\n", averageEfficiency));
         report.append("---------------------------\n");
@@ -221,5 +240,25 @@ public class FleetManager {
             }
         }
         System.out.println("Fleet successfully saved to " + filename);
+    }
+
+    public void sortFleetByEfficiency(){
+        Collections.sort(fleet, Comparator.comparingDouble(Vehicle::calculateFuelEfficiency));
+    }
+    
+    public void sortFleetBySpeed(){
+        Collections.sort(fleet, Comparator.comparingDouble(Vehicle::getMaxSpeed));
+    }
+
+    public void sortFleetByModel(){
+        Collections.sort(fleet, Comparator.comparing(Vehicle::getModel));
+    }
+
+    public Vehicle getVehicleWithMaxSpeed(){
+        return Collections.max(fleet, Comparator.comparingDouble(Vehicle:: getMaxSpeed));
+    }
+
+    public Vehicle getVehicleWithMinSpeed(){
+        return Collections.min(fleet, Comparator.comparingDouble(Vehicle:: getMaxSpeed));
     }
 }
