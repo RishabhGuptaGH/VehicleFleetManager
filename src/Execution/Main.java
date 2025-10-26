@@ -90,7 +90,8 @@ public class Main {
                 8. Load Fleet
                 9. Search by Type
                 10. List Vehicles Needing Maintenance
-                11. Exit""");
+                11. Sort Fleet by Parameters
+                12. Exit""");
     }
 
     private static double validDoubleInput(boolean zero){
@@ -143,7 +144,7 @@ public class Main {
         }
     }
 
-    public static int getValidPositiveIntInput() {
+    public static int getValidPositiveIntInput(int upperlimit) {
         int value;
         Scanner s1 = new Scanner(System.in);
 
@@ -152,7 +153,7 @@ public class Main {
                 value = s1.nextInt();
                 s1.nextLine();
 
-                if (value > 0) {
+                if ((value > 0)&&(value <= upperlimit)) {
                     return value;
                 } else {
                     System.err.println("Invalid input. The number must be positive and greater than zero.");
@@ -189,17 +190,17 @@ public class Main {
         switch (vehicleClass.getSimpleName()) {
             case "Car":
                 if (print) System.out.println("Enter Number of Wheels: ");
-                int carWheels = getValidPositiveIntInput();
+                int carWheels = getValidPositiveIntInput(1000);
                 return new Car(id, model, maxSpeed, currentMileage, carWheels);
 
             case "Bus":
                 if (print) System.out.println("Enter Number of Wheels: ");
-                int busWheels = getValidPositiveIntInput();
+                int busWheels = getValidPositiveIntInput(1000);
                 return new Bus(id, model, maxSpeed, currentMileage, busWheels);
 
             case "Truck":
                 if (print) System.out.println("Enter Number of Wheels: ");
-                int truckWheels = getValidPositiveIntInput();
+                int truckWheels = getValidPositiveIntInput(1000);
                 return new Truck(id, model, maxSpeed, currentMileage, truckWheels);
 
             case "Airplane":
@@ -323,7 +324,7 @@ public class Main {
         while (!done){
             displayMenu();
 
-            int choice = getValidPositiveIntInput();
+            int choice = getValidPositiveIntInput(1000);
 
             switch (choice){
                 case 1:
@@ -401,19 +402,35 @@ public class Main {
                         tempVehicle.displayInfo();
                         System.out.println();
                     }
-
                     break;
 
+                    
                 case 11:
-                    System.out.println("\n---Exiting Program---");
-                    done = true;
-                    break;
+                    System.out.println("\nEnter parameter for Sorting:\n1.Efficiency\n2,Speed\n3.Model\n");
+                    int option = getValidPositiveIntInput(3);
 
+                    if(option == 1){
+                        f1.sortFleetByEfficiency();
+                        System.out.println("Fleet sorted by Efficiency Successfully!");
+                    }
+                    else if (option == 2){
+                        f1.sortFleetBySpeed();
+                        System.out.println("Fleet sorted by Speed Successfully!");
+                    }
+                    else {
+                        f1.sortFleetByModel();
+                        System.out.println("Fleet sorted by Model Successfully!");
+                    }
+                    break;
+                case 12:
+                        System.out.println("\n---Exiting Program---");
+                        done = true;
+                        break;
                 default:
                     System.err.println("Invalid choice try again\n");
             }
 
             if(done)break;
         }
-    }
+    }    
 }
