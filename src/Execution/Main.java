@@ -12,7 +12,7 @@ import java.util.*;
 
 
 public class Main {
-
+    
     private static void addVehicleWithChecks(FleetManager f1, Vehicle c1){
         try {
             f1.addVehicle(c1);
@@ -249,11 +249,20 @@ public class Main {
             }
         }
 
+        int lineNum = 1;
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 List<String> values = Arrays.asList(line.split(","));
-                addFromList(f1, values);
+                try{
+                    addFromList(f1, values);
+                }
+                catch(Exception e){
+                    System.err.println("Error in Line: " + lineNum + " | Entry not Added");
+                }
+                finally{
+                    lineNum++;
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
@@ -263,50 +272,50 @@ public class Main {
     private static void addFromList(FleetManager f1, List<String> values) {
         switch (values.get(0)) {
             case "Car":
-                Car v1 = new Car(values.get(1), values.get(2), Double.parseDouble(values.get(3)), 0, Integer.parseInt(values.get(4)));
-                v1.setFuelLevel(Double.parseDouble(values.get(5)));
-                v1.setPassengerCapacity(Integer.parseInt(values.get(6)));
-                v1.setCurrentPassengers(Integer.parseInt(values.get(7)));
+                Car v1 = new Car(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
+                v1.setFuelLevel(Double.parseDouble(values.get(6)));
+                v1.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                v1.setCurrentPassengers(Integer.parseInt(values.get(8)));
 
                 addVehicleWithChecks(f1, v1);
                 return;
 
             case "Truck":
-                Truck v2 = new Truck(values.get(1), values.get(2), Double.parseDouble(values.get(3)), 0, Integer.parseInt(values.get(4)));
-                v2.setFuelLevel(Double.parseDouble(values.get(5)));
-                v2.setCargoCapacity(Double.parseDouble(values.get(6)));
-                v2.setCurrentCargo(Double.parseDouble(values.get(7)));
+                Truck v2 = new Truck(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
+                v2.setFuelLevel(Double.parseDouble(values.get(6)));
+                v2.setCargoCapacity(Double.parseDouble(values.get(7)));
+                v2.setCurrentCargo(Double.parseDouble(values.get(8)));
 
                 addVehicleWithChecks(f1, v2);
                 return;
 
             case "AirPlane":
-                Airplane v3 = new Airplane(values.get(1), values.get(2), Double.parseDouble(values.get(3)), 0, Double.parseDouble(values.get(4)));
-                v3.setFuelLevel(Double.parseDouble(values.get(5)));
-                v3.setPassengerCapacity(Integer.parseInt(values.get(6)));
-                v3.setCurrentPassengers(Integer.parseInt(values.get(7)));
-                v3.setCargoCapacity(Double.parseDouble(values.get(8)));
-                v3.setCurrentCargo(Double.parseDouble(values.get(9)));
+                Airplane v3 = new Airplane(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Double.parseDouble(values.get(5)));
+                v3.setFuelLevel(Double.parseDouble(values.get(6)));
+                v3.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                v3.setCurrentPassengers(Integer.parseInt(values.get(8)));
+                v3.setCargoCapacity(Double.parseDouble(values.get(9)));
+                v3.setCurrentCargo(Double.parseDouble(values.get(10)));
 
                 addVehicleWithChecks(f1, v3);
                 return;
 
             case "Bus":
-                Bus v4 = new Bus(values.get(1), values.get(2), Double.parseDouble(values.get(3)), 0, Integer.parseInt(values.get(4)));
-                v4.setFuelLevel(Double.parseDouble(values.get(5)));
-                v4.setPassengerCapacity(Integer.parseInt(values.get(6)));
-                v4.setCurrentPassengers(Integer.parseInt(values.get(7)));
-                v4.setCargoCapacity(Double.parseDouble(values.get(8)));
-                v4.setCurrentCargo(Double.parseDouble(values.get(9)));
+                Bus v4 = new Bus(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
+                v4.setFuelLevel(Double.parseDouble(values.get(6)));
+                v4.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                v4.setCurrentPassengers(Integer.parseInt(values.get(8)));
+                v4.setCargoCapacity(Double.parseDouble(values.get(9)));
+                v4.setCurrentCargo(Double.parseDouble(values.get(10)));
 
                 addVehicleWithChecks(f1, v4);
                 return;
 
             case "CargoShip":
-                CargoShip v5 = new CargoShip(values.get(1), values.get(2), Double.parseDouble(values.get(3)), 0, Boolean.parseBoolean(values.get(4)));
-                v5.setFuelLevel(Double.parseDouble(values.get(5)));
-                v5.setCargoCapacity(Double.parseDouble(values.get(6)));
-                v5.setCurrentCargo(Double.parseDouble(values.get(7)));
+                CargoShip v5 = new CargoShip(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Boolean.parseBoolean(values.get(5)));
+                v5.setFuelLevel(Double.parseDouble(values.get(6)));
+                v5.setCargoCapacity(Double.parseDouble(values.get(7)));
+                v5.setCurrentCargo(Double.parseDouble(values.get(8)));
 
                 addVehicleWithChecks(f1, v5);
                 return;
@@ -406,20 +415,23 @@ public class Main {
 
                     
                 case 11:
-                    System.out.println("\nEnter parameter for Sorting:\n1.Efficiency\n2,Speed\n3.Model\n");
+                    System.out.println("\nEnter parameter for Sorting:\n1.Efficiency\n2.Speed\n3.Model\n");
                     int option = getValidPositiveIntInput(3);
 
                     if(option == 1){
                         f1.sortFleetByEfficiency();
                         System.out.println("Fleet sorted by Efficiency Successfully!");
+                        f1.printFleetByArgumnet("Efficiency");
                     }
                     else if (option == 2){
                         f1.sortFleetBySpeed();
                         System.out.println("Fleet sorted by Speed Successfully!");
+                        f1.printFleetByArgumnet("Speed");
                     }
                     else {
                         f1.sortFleetByModel();
                         System.out.println("Fleet sorted by Model Successfully!");
+                        f1.printFleetByArgumnet("Model");
                     }
                     break;
                 case 12:
@@ -432,5 +444,5 @@ public class Main {
 
             if(done)break;
         }
-    }    
+    }
 }

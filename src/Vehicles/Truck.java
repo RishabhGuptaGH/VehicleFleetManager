@@ -106,29 +106,11 @@ public class Truck extends LandVehicle implements FuelConsumable, CargoCarrier, 
         System.out.println(getId() + ": Maintenance performed successfully!");
         maintenanceNeeded = false;
         setCurrentMilage(0);
-        //Check if you need to change milage to 0 and so a setter func as well
     }
 
     public boolean getMaintenanceNeeded(){
         return maintenanceNeeded;
     }
-
-    @Override
-    public String toCsvString() {
-        String commonData = super.toCsvString();
-
-        String truckSpecificData = String.join(",",
-                String.valueOf(this.getNumWheels()),
-                String.valueOf(this.getFuelLevel()),
-                String.valueOf(this.getCargoCapacity()),
-                String.valueOf(this.getCurrentCargo()),
-                String.valueOf(this.getMaintenanceNeeded())
-        );
-
-        return commonData + "," + truckSpecificData;
-    }
-
-
 
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;

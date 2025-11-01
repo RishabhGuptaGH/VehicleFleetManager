@@ -141,23 +141,6 @@ public class Bus extends LandVehicle implements FuelConsumable, PassengerCarrier
         return maintenanceNeeded;
     }
 
-    @Override
-    public String toCsvString() {
-        String commonData = super.toCsvString();
-
-        String busSpecificData = String.join(",",
-                String.valueOf(this.getNumWheels()),
-                String.valueOf(this.getFuelLevel()),
-                String.valueOf(this.getPassengerCapacity()),
-                String.valueOf(this.getCurrentPassengers()),
-                String.valueOf(this.getCargoCapacity()),
-                String.valueOf(this.getCurrentCargo()),
-                String.valueOf(this.getMaintenanceNeeded())
-        );
-
-        return commonData + "," + busSpecificData;
-    }
-
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
     }

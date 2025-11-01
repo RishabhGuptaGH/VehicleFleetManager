@@ -114,21 +114,6 @@ public class Car extends LandVehicle implements FuelConsumable, PassengerCarrier
         return maintenanceNeeded;
     }
 
-    @Override
-    public String toCsvString() {
-        String commonData = super.toCsvString();
-
-        String carSpecificData = String.join(",",
-                String.valueOf(this.getNumWheels()),
-                String.valueOf(this.getFuelLevel()),
-                String.valueOf(this.getPassengerCapacity()),
-                String.valueOf(this.getCurrentPassengers()),
-                String.valueOf(this.getMaintenanceNeeded())
-        );
-
-        return commonData + "," + carSpecificData;
-    }
-
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
     }

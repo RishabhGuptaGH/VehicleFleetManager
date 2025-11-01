@@ -142,23 +142,6 @@ public class Airplane extends AirVehicle implements FuelConsumable, PassengerCar
         return maintenanceNeeded;
     }
 
-    @Override
-    public String toCsvString() {
-        String commonData = super.toCsvString();
-
-        String airplaneSpecificData = String.join(",",
-                String.valueOf(this.getMaxAltitude()),
-                String.valueOf(this.getFuelLevel()),
-                String.valueOf(this.getPassengerCapacity()),
-                String.valueOf(this.getCurrentPassengers()),
-                String.valueOf(this.getCargoCapacity()),
-                String.valueOf(this.getCurrentCargo()),
-                String.valueOf(this.maintenanceNeeded)
-        );
-
-        return commonData + "," + airplaneSpecificData;
-    }
-
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
     }

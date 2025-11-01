@@ -119,22 +119,6 @@ public class CargoShip extends WaterVehicle implements CargoCarrier, Maintainabl
         return maintenanceNeeded;
     }
 
-    @Override
-    public String toCsvString() {
-        String commonData = super.toCsvString();
-
-        String cargoShipSpecificData = String.join(",",
-                String.valueOf(this.shipHasSail()),
-                String.valueOf(this.getFuelLevel()),
-                String.valueOf(this.getCargoCapacity()),
-                String.valueOf(this.getCurrentCargo()),
-                String.valueOf(this.getMaintenanceNeeded())
-        );
-
-        return commonData + "," + cargoShipSpecificData;
-    }
-
-
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;
     }

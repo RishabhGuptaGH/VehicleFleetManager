@@ -236,7 +236,37 @@ public class FleetManager {
     public void saveToFile(String filename) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (Vehicle vehicle : fleet) {
-                writer.println(vehicle.toCsvString());
+                String basicString = vehicle.toCsvString();
+                String currClass = basicString.split(",")[0];
+                        
+                switch (currClass) {
+                case "Car":
+                    Car v1 = (Car)vehicle;
+                    basicString += "," + v1.getNumWheels() + "," + v1.getFuelLevel() + "," + v1.getPassengerCapacity() + "," + v1.getCurrentPassengers();
+                    break;
+                case "Bus":
+                    Bus b1 = (Bus)vehicle;
+                    basicString += "," + b1.getNumWheels() + "," + b1.getFuelLevel() + "," + b1.getPassengerCapacity() + "," + b1.getCurrentPassengers() + "," + b1.getCargoCapacity() + ',' + b1.getCurrentCargo();
+                    break;
+                case "Truck":
+                    Truck t1 = (Truck)vehicle;
+                    basicString += "," + t1.getNumWheels() + "," + t1.getFuelLevel() + "," + t1.getCargoCapacity() + "," + t1.getCurrentCargo();
+                    break;
+                case "Airplane":
+                    Airplane a1 = (Airplane)vehicle;
+                    basicString += "," + a1.getMaxAltitude() + "," + a1.getFuelLevel() +  "," + a1.getPassengerCapacity() + "," + a1.getCurrentPassengers() + "," + a1.getCargoCapacity() + "," + a1.getCurrentCargo();
+                    String tempArr_Plane[] = basicString.split(",");
+                    tempArr_Plane[0] = "AirPlane";
+
+                    basicString = String.join(",", tempArr_Plane);
+                    break;
+                case "CargoShip":
+                    CargoShip c1 = (CargoShip)vehicle;
+                    basicString += "," + c1.shipHasSail() + "," + c1.getFuelLevel() + "," + c1.getCargoCapacity() + "," + c1.getCurrentCargo();
+                    break;
+
+                }
+                writer.println(basicString);
             }
         }
         System.out.println("Fleet successfully saved to " + filename);
@@ -260,5 +290,19 @@ public class FleetManager {
 
     public Vehicle getVehicleWithMinSpeed(){
         return Collections.min(fleet, Comparator.comparingDouble(Vehicle:: getMaxSpeed));
+    }
+
+    public void printFleetByArgumnet(String arg){
+        for(Vehicle temp: fleet){
+            if(arg == "Speed"){
+                System.out.println(temp.getId() + ": " + temp.getMaxSpeed());
+            }
+            else if(arg == "Model"){
+                System.out.println(temp.getId() + ": " + temp.getModel());
+            }
+            else if(arg == "Efficiency"){
+                System.out.println(temp.getId() + ": " + temp.getModel());
+            }
+        }
     }
 }
