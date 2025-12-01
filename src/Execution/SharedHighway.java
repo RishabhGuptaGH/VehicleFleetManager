@@ -7,7 +7,7 @@ public class SharedHighway {
     private static final ReentrantLock lock = new ReentrantLock();
 
     public static void updateDistance(int amount) {
-        lock.lock();
+//        lock.lock();
         try {
             int temp = totalHighwayDistance;
             try {
@@ -17,7 +17,7 @@ public class SharedHighway {
             }
             totalHighwayDistance = temp + amount;
         } finally {
-            lock.unlock();
+//            lock.unlock();
         }
     }
 

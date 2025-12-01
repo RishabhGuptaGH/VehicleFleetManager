@@ -14,6 +14,19 @@ The code is structured to demonstrate several key object-oriented programming (O
 
 * **Interfaces:** Interfaces like FuelConsumable, CargoCarrier, PassengerCarrier, and Maintainable are used to define modular behaviors. A class can implement multiple interfaces, allowing for a flexible design where, for example, a Bus can be both a PassengerCarrier and a CargoCarrier.
 
+## Multithreading Demonstration
+
+* **Without Race Condition Syncronisation** To show the incorrect behaviour, we will run the multithreaded program without any Reentrant Locks.
+Since all the threads are accessing the shared counter together, it is not able to store the correct information and gives indeterminate output
+![alt text](image-1.png)
+
+* **With Race Condition Syncronisation** When we add lock before accessing the shared variable, only a single thread can access the shared variable at a time preventing any race conditions and giving us the correct deterministic output
+![alt text](image.png)
+
+## GUI
+The graphical interface is built using Java Swing to provide a real-time dashboard for controlling the multithreaded simulation (Start, Pause, Stop, Refuel). It features a scrollable vehicle list for tracking individual progress and a status bar that displays both the Shared Highway Counter and the Actual Sum of mileages side-by-side. This layout allows users to visually verify the race condition by observing discrepancies between the two values when synchronization is disabled.
+
+
 ## Collections and Generics
 The container was changed to a generic ArrayList<Vehicle> to provide dynamic resizing and ensure compile-time type safety while still allowing for polymorphic storage of all Vehicle subtypes.
 
