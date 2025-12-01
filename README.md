@@ -14,6 +14,8 @@ The code is structured to demonstrate several key object-oriented programming (O
 
 * **Interfaces:** Interfaces like FuelConsumable, CargoCarrier, PassengerCarrier, and Maintainable are used to define modular behaviors. A class can implement multiple interfaces, allowing for a flexible design where, for example, a Bus can be both a PassengerCarrier and a CargoCarrier.
 
+## Collections and Generics
+The container was changed to a generic ArrayList<Vehicle> to provide dynamic resizing and ensure compile-time type safety while still allowing for polymorphic storage of all Vehicle subtypes.
 
 ## Features
 * **Add/Remove Vehicles:** Add different types of vehicles (e.g., Cars, Trucks, Airplanes) to the fleet.

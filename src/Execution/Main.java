@@ -4,6 +4,7 @@ import Vehicles.*;
 import Exceptions.*;
 import Interfaces.*;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -322,127 +323,10 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-
-        FleetManager f1 = new FleetManager();
-
-        Scanner s1 = new Scanner(System.in);
-
-        boolean done = false;
-
-        while (!done){
-            displayMenu();
-
-            int choice = getValidPositiveIntInput(1000);
-
-            switch (choice){
-                case 1:
-                    Class<?> T = getClassFromUserInput();
-                    System.out.println("Enter Vehicle ID: ");
-                    String vID = getValidStringInput();
-                    System.out.println("Enter Vehicle Model: ");
-                    String vModel = getValidStringInput();
-                    System.out.println("Enter Vehicle Max Speed: ");
-                    double vMaxSpeed = validDoubleInput(false);
-                    System.out.println("Enter Vehicle Mileage: ");
-                    double vCurrentMilage = validDoubleInput(true);
-
-                    Vehicle newVehicle = createVehicleInstance(T, vID, vModel, vMaxSpeed, vCurrentMilage, true);
-
-                    if (newVehicle != null) {
-                        addVehicleWithChecks(f1, newVehicle);
-                    }
-                    break;
-
-                case 2:
-                    System.out.println("\nEnter Vehicle ID to be removed");
-                    String vId = getValidStringInput();
-                    removeVehicleWithChecks(f1, vId);
-                    break;
-
-                case 3:
-                    System.out.println("\nEnter distance to travel (+ve only)");
-
-                    double distance  = validDoubleInput(false);
-                    moveAllWithChecks(f1, distance);
-                    break;
-
-                case 4:
-                    System.out.println("\nEnter amount of fuel to refuel (+ve only)");
-                    double fuel  = validDoubleInput(false);
-                    refuelWithChecks(f1, fuel);
-                    break;
-
-                case 5:
-                    performMaintenance(f1);
-                    break;
-
-                case 6:
-                    String report = generateReport(f1);
-                    System.out.println(report);
-                    break;
-
-                case 7:
-                    System.out.println("Enter the name of output file");
-                    saveToFile(f1);
-                    break;
-
-                case 8:
-                    readCsvFile(f1);
-                    break;
-
-                case 9:
-                    Class<?> c1= getClassFromUserInput();
-                    List<Vehicle> l1 = searchByType(f1,c1);
-
-                    System.out.println("\n---List of vehicles belonging to Required Class---\n");
-
-                    for(Vehicle tempVehicle: l1){
-                        tempVehicle.displayInfo();
-                    }
-                    break;
-
-                case 10:
-                    List<Vehicle> l2 = getVehicleNeedingMaintenance(f1);
-
-                    System.out.println("\n---List of vehicles requiring maintenance---\n");
-                    System.out.println();
-                    for(Vehicle tempVehicle: l2){
-                        tempVehicle.displayInfo();
-                        System.out.println();
-                    }
-                    break;
-
-                    
-                case 11:
-                    System.out.println("\nEnter parameter for Sorting:\n1.Efficiency\n2.Speed\n3.Model\n");
-                    int option = getValidPositiveIntInput(3);
-
-                    if(option == 1){
-                        f1.sortFleetByEfficiency();
-                        System.out.println("Fleet sorted by Efficiency Successfully!");
-                        f1.printFleetByArgumnet("Efficiency");
-                    }
-                    else if (option == 2){
-                        f1.sortFleetBySpeed();
-                        System.out.println("Fleet sorted by Speed Successfully!");
-                        f1.printFleetByArgumnet("Speed");
-                    }
-                    else {
-                        f1.sortFleetByModel();
-                        System.out.println("Fleet sorted by Model Successfully!");
-                        f1.printFleetByArgumnet("Model");
-                    }
-                    break;
-                case 12:
-                        System.out.println("\n---Exiting Program---");
-                        done = true;
-                        break;
-                default:
-                    System.err.println("Invalid choice try again\n");
-            }
-
-            if(done)break;
-        }
+    public static void main(String[] args) throws InvalidOperationException {
+        SwingUtilities.invokeLater(() -> {
+            SimulatorGUI gui = new SimulatorGUI();
+            gui.setVisible(true);
+        });
     }
 }
