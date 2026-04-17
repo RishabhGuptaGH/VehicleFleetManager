@@ -9,45 +9,51 @@ public abstract class Vehicle {
     private double maxSpeed;
     private double currentMilage;
 
-    public Vehicle(String vId, String vModel, double vMaxSpeed, double vCurrentMilage){
+    public Vehicle(String vId, String vModel, double vMaxSpeed, double vCurrentMilage) {
         id = vId;
         model = vModel;
         maxSpeed = vMaxSpeed;
         currentMilage = vCurrentMilage;
-
     }
 
-    //Updates mileage, prints type-specific movement; throws Exceptions.InvalidOperationException if distance < 0.
-    public abstract void move(double distance)throws InvalidOperationException, InsufficientFuelException;
+    public abstract void move(double distance) throws InvalidOperationException, InsufficientFuelException;
 
-    //Returns km per liter (or 0 for non-fuel vehicles).
     public abstract double calculateFuelEfficiency();
 
-    //Returns time in hours (distance / maxSpeed, adjusted by type).
     abstract double estimateJourneyTime(double distance);
 
-    public void displayInfo(){
-        System.out.println("Vehicles.Vehicle ID: " + id);
-        System.out.println("Vehicles.Vehicle Model: " + model);
-        System.out.println("Vehicles.Vehicle Max Speed: " + maxSpeed);
-        System.out.println("Vehicles.Vehicle Current Milage: " + currentMilage);
-    };
+    public void displayInfo() {
+        System.out.println("Vehicle ID: " + id);
+        System.out.println("Vehicle Model: " + model);
+        System.out.println("Vehicle Max Speed: " + maxSpeed + " km/h");
+        System.out.println("Vehicle Current Mileage: " + currentMilage + " km");
+    }
 
-    public String getId(){
+    @Override
+    public String toString() {
+        return String.format("%s [%s] - %s | Speed: %.1f km/h | Mileage: %.1f km",
+                getClass().getSimpleName(), id, model, maxSpeed, currentMilage);
+    }
+
+    public String getId() {
         return id;
     }
 
-    public double getCurrentMilage(){
+    public double getCurrentMilage() {
         return currentMilage;
     }
 
-    public void setCurrentMilage(double newMil){
+    public void setCurrentMilage(double newMil) {
         currentMilage = newMil;
     }
 
-    public double getMaxSpeed() { return maxSpeed; }
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
 
-    public String getModel(){ return model;}
+    public String getModel() {
+        return model;
+    }
 
     public String toCsvString() {
         return String.join(",",

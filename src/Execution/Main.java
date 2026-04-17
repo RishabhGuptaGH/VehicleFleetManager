@@ -13,74 +13,66 @@ import java.util.*;
 
 
 public class Main {
-    
-    private static void addVehicleWithChecks(FleetManager f1, Vehicle c1){
+
+    private static void addVehicleWithChecks(FleetManager f1, Vehicle c1) {
         try {
             f1.addVehicle(c1);
             System.out.println(c1.getId() + ": Added Successfully!");
-        }
-        catch (InvalidOperationException e){
+        } catch (InvalidOperationException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void removeVehicleWithChecks(FleetManager f1, String c1){
-        try{
+    private static void removeVehicleWithChecks(FleetManager f1, String c1) {
+        try {
             f1.removeVehicle(c1);
             System.out.println(c1 + ": Removed Successfully!");
-        }
-        catch (InvalidOperationException e){
+        } catch (InvalidOperationException e) {
             System.err.println(c1 + ": " + e.getMessage());
         }
     }
 
-    private static void moveAllWithChecks(FleetManager f1, double d){
+    private static void moveAllWithChecks(FleetManager f1, double d) {
         try {
             f1.startAllJourney(d);
-        }
-        catch (InvalidOperationException | InsufficientFuelException e){
+        } catch (InvalidOperationException | InsufficientFuelException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void refuelWithChecks(FleetManager f1, double amount){
+    private static void refuelWithChecks(FleetManager f1, double amount) {
         try {
             f1.refuelAll(amount);
-        }
-        catch (InvalidOperationException e){
+        } catch (InvalidOperationException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void performMaintenance(FleetManager f1){
+    private static void performMaintenance(FleetManager f1) {
         f1.maintainAll();
     }
 
-    private static List<Vehicle>searchByType(FleetManager f1, Class<?> type){
+    private static List<Vehicle> searchByType(FleetManager f1, Class<?> type) {
         return f1.searchByType(type);
     }
 
-    private static void sortByFuelEfficiency(FleetManager f1){
+    private static void sortByFuelEfficiency(FleetManager f1) {
         System.out.println("\n---Sorted Vehicles By Efficiency---");
         f1.sortFleetByEfficiency();
     }
 
-    private static List<Vehicle>getVehicleNeedingMaintenance(FleetManager f1){
+    private static List<Vehicle> getVehicleNeedingMaintenance(FleetManager f1) {
         return f1.getVehicleNeedingMaintenance();
     }
 
-    private static void sleep(){
-        long  i = 0;
-        while (i < 100000000)i++;
-    }
-
-    private static double totalFuelConsumption(FleetManager f1, double distance){
+    private static double totalFuelConsumption(FleetManager f1, double distance) {
         return f1.getTotalFuelConsumption(distance);
     }
 
-    private static void displayMenu(){
+    private static void displayMenu() {
         System.out.println("""
-                \nEnter your choice:
+                
+                Enter your choice:
                 1. Add Vehicle
                 2. Remove Vehicle
                 3. Start Journey
@@ -95,26 +87,19 @@ public class Main {
                 12. Exit""");
     }
 
-    private static double validDoubleInput(boolean zero){
+    private static double validDoubleInput(boolean allowNegative) {
         Scanner s1 = new Scanner(System.in);
-        double value = 0;
-        double threshold = 0;
-        if(zero)threshold = -0.00001;
         while (true) {
-            sleep();
             try {
-                value = s1.nextDouble();
+                double value = s1.nextDouble();
                 s1.nextLine();
-                if(value > threshold){
+                if (allowNegative || value > 0) {
                     return value;
                 }
-                else{
-                    System.err.println("Invalid input. Please enter a valid input");
-                }
+                System.err.println("Invalid input. Please enter a positive value");
             } catch (InputMismatchException e) {
-                System.err.println("Invalid input. Please enter a valid input\n");
+                System.err.println("Invalid input. Please enter a valid number");
                 s1.nextLine();
-
             }
         }
     }
@@ -123,7 +108,6 @@ public class Main {
         Scanner s1 = new Scanner(System.in);
 
         while (true) {
-
             System.out.print("Enter vehicle type to search for (Car, Bus, Truck, Airplane, CargoShip): ");
             String inputType = s1.nextLine();
             switch (inputType.toLowerCase()) {
@@ -139,26 +123,22 @@ public class Main {
                     return CargoShip.class;
                 default:
                     System.err.println("Invalid type entered. Type does not exist.");
-                    sleep();
-                    sleep();
             }
         }
     }
 
-    public static int getValidPositiveIntInput(int upperlimit) {
-        int value;
+    public static int getValidPositiveIntInput(int upperLimit) {
         Scanner s1 = new Scanner(System.in);
 
         while (true) {
             try {
-                value = s1.nextInt();
+                int value = s1.nextInt();
                 s1.nextLine();
 
-                if ((value > 0)&&(value <= upperlimit)) {
+                if (value > 0 && value <= upperLimit) {
                     return value;
-                } else {
-                    System.err.println("Invalid input. The number must be positive and greater than zero.");
                 }
+                System.err.println("Invalid input. The number must be between 1 and " + upperLimit + ".");
 
             } catch (InputMismatchException e) {
                 System.err.println("Invalid input. Please enter a natural number.");
@@ -167,22 +147,19 @@ public class Main {
         }
     }
 
-    private static String generateReport(FleetManager f1){
+    private static String generateReport(FleetManager f1) {
         return f1.generateReport();
     }
 
     public static String getValidStringInput() {
-        String input;
         Scanner s1 = new Scanner(System.in);
 
         while (true) {
-            input = s1.nextLine().trim();
-
+            String input = s1.nextLine().trim();
             if (!input.isEmpty()) {
                 return input;
-            } else {
-                System.err.println("Input cannot be empty. Please try again.");
             }
+            System.err.println("Input cannot be empty. Please try again.");
         }
     }
 
@@ -205,7 +182,7 @@ public class Main {
                 return new Truck(id, model, maxSpeed, currentMileage, truckWheels);
 
             case "Airplane":
-                if (print) System.out.println("Enter Number of Wheels: ");
+                if (print) System.out.println("Enter Max Altitude: ");
                 double maxAltitude = validDoubleInput(false);
                 return new Airplane(id, model, maxSpeed, currentMileage, maxAltitude);
 
@@ -221,14 +198,14 @@ public class Main {
         }
     }
 
-    private static void saveToFile(FleetManager f1){
+    private static void saveToFile(FleetManager f1) {
         while (true) {
-            String s1 = getValidStringInput();
-            try{
-                f1.saveToFile(s1);
+            String filename = getValidStringInput();
+            try {
+                f1.saveToFile(filename);
                 break;
             } catch (IOException e) {
-                System.err.println("File with same name already exists");
+                System.err.println("Error saving file: " + e.getMessage());
             }
         }
     }
@@ -254,14 +231,16 @@ public class Main {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    lineNum++;
+                    continue;
+                }
                 List<String> values = Arrays.asList(line.split(","));
-                try{
+                try {
                     addFromList(f1, values);
-                }
-                catch(Exception e){
-                    System.err.println("Error in Line: " + lineNum + " | Entry not Added");
-                }
-                finally{
+                } catch (Exception e) {
+                    System.err.println("Error in Line: " + lineNum + " | Entry not Added (" + e.getMessage() + ")");
+                } finally {
                     lineNum++;
                 }
             }
@@ -271,59 +250,70 @@ public class Main {
     }
 
     private static void addFromList(FleetManager f1, List<String> values) {
-        switch (values.get(0)) {
+        String type = values.get(0);
+        if (type.equalsIgnoreCase("airplane")) type = "Airplane";
+
+        switch (type) {
             case "Car":
                 Car v1 = new Car(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
-                v1.setFuelLevel(Double.parseDouble(values.get(6)));
-                v1.setPassengerCapacity(Integer.parseInt(values.get(7)));
-                v1.setCurrentPassengers(Integer.parseInt(values.get(8)));
-
+                if (values.size() > 6) {
+                    v1.setFuelLevel(Double.parseDouble(values.get(6)));
+                    v1.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                    v1.setCurrentPassengers(Integer.parseInt(values.get(8)));
+                }
                 addVehicleWithChecks(f1, v1);
                 return;
 
             case "Truck":
                 Truck v2 = new Truck(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
-                v2.setFuelLevel(Double.parseDouble(values.get(6)));
-                v2.setCargoCapacity(Double.parseDouble(values.get(7)));
-                v2.setCurrentCargo(Double.parseDouble(values.get(8)));
-
+                if (values.size() > 6) {
+                    v2.setFuelLevel(Double.parseDouble(values.get(6)));
+                    v2.setCargoCapacity(Double.parseDouble(values.get(7)));
+                    v2.setCurrentCargo(Double.parseDouble(values.get(8)));
+                }
                 addVehicleWithChecks(f1, v2);
                 return;
 
-            case "AirPlane":
+            case "Airplane":
                 Airplane v3 = new Airplane(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Double.parseDouble(values.get(5)));
-                v3.setFuelLevel(Double.parseDouble(values.get(6)));
-                v3.setPassengerCapacity(Integer.parseInt(values.get(7)));
-                v3.setCurrentPassengers(Integer.parseInt(values.get(8)));
-                v3.setCargoCapacity(Double.parseDouble(values.get(9)));
-                v3.setCurrentCargo(Double.parseDouble(values.get(10)));
-
+                if (values.size() > 6) {
+                    v3.setFuelLevel(Double.parseDouble(values.get(6)));
+                    v3.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                    v3.setCurrentPassengers(Integer.parseInt(values.get(8)));
+                    v3.setCargoCapacity(Double.parseDouble(values.get(9)));
+                    v3.setCurrentCargo(Double.parseDouble(values.get(10)));
+                }
                 addVehicleWithChecks(f1, v3);
                 return;
 
             case "Bus":
                 Bus v4 = new Bus(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Integer.parseInt(values.get(5)));
-                v4.setFuelLevel(Double.parseDouble(values.get(6)));
-                v4.setPassengerCapacity(Integer.parseInt(values.get(7)));
-                v4.setCurrentPassengers(Integer.parseInt(values.get(8)));
-                v4.setCargoCapacity(Double.parseDouble(values.get(9)));
-                v4.setCurrentCargo(Double.parseDouble(values.get(10)));
-
+                if (values.size() > 6) {
+                    v4.setFuelLevel(Double.parseDouble(values.get(6)));
+                    v4.setPassengerCapacity(Integer.parseInt(values.get(7)));
+                    v4.setCurrentPassengers(Integer.parseInt(values.get(8)));
+                    v4.setCargoCapacity(Double.parseDouble(values.get(9)));
+                    v4.setCurrentCargo(Double.parseDouble(values.get(10)));
+                }
                 addVehicleWithChecks(f1, v4);
                 return;
 
             case "CargoShip":
                 CargoShip v5 = new CargoShip(values.get(1), values.get(2), Double.parseDouble(values.get(3)), Double.parseDouble(values.get(4)), Boolean.parseBoolean(values.get(5)));
-                v5.setFuelLevel(Double.parseDouble(values.get(6)));
-                v5.setCargoCapacity(Double.parseDouble(values.get(7)));
-                v5.setCurrentCargo(Double.parseDouble(values.get(8)));
-
+                if (values.size() > 6) {
+                    v5.setFuelLevel(Double.parseDouble(values.get(6)));
+                    v5.setCargoCapacity(Double.parseDouble(values.get(7)));
+                    v5.setCurrentCargo(Double.parseDouble(values.get(8)));
+                }
                 addVehicleWithChecks(f1, v5);
                 return;
+
+            default:
+                System.err.println("Unknown vehicle type: " + type);
         }
     }
 
-    public static void main(String[] args) throws InvalidOperationException {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             SimulatorGUI gui = new SimulatorGUI();
             gui.setVisible(true);

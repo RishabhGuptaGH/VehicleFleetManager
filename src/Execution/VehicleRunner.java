@@ -36,35 +36,51 @@ public class VehicleRunner implements Runnable {
                 }
 
                 vehicle.move(10);
-
                 SharedHighway.updateDistance(10);
 
                 SwingUtilities.invokeLater(() -> {
-                    String status = String.format("ID: %s | Model: %s | Mileage: %.1f | Fuel: %.1f",
-                            vehicle.getId(), vehicle.getModel(), vehicle.getCurrentMilage(),
-                            ((FuelConsumable)vehicle).getFuelLevel());
+                    String status;
+                    if (vehicle instanceof FuelConsumable fc) {
+                        status = String.format("%s [%s] | Mileage: %.1f km | Fuel: %.1f",
+                                vehicle.getClass().getSimpleName(), vehicle.getId(),
+                                vehicle.getCurrentMilage(), fc.getFuelLevel());
+                    } else {
+                        status = String.format("%s [%s] | Mileage: %.1f km",
+                                vehicle.getClass().getSimpleName(), vehicle.getId(),
+                                vehicle.getCurrentMilage());
+                    }
                     statusLabel.setText(status);
                 });
 
                 Thread.sleep(1000);
 
             } catch (InsufficientFuelException e) {
-                SwingUtilities.invokeLater(() -> statusLabel.setText(vehicle.getId() + ": OUT OF FUEL!"));
+                SwingUtilities.invokeLater(() -> statusLabel.setText(
+                        vehicle.getClass().getSimpleName() + " [" + vehicle.getId() + "]: OUT OF FUEL!"));
                 paused = true;
-            } catch (InterruptedException | InvalidOperationException e) {
-                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (InvalidOperationException e) {
+                SwingUtilities.invokeLater(() -> statusLabel.setText(
+                        vehicle.getClass().getSimpleName() + " [" + vehicle.getId() + "]: Error - " + e.getMessage()));
             }
         }
     }
 
     public void refuelVehicle() {
         try {
-            ((FuelConsumable)vehicle).refuel(100);
+            if (vehicle instanceof FuelConsumable fc) {
+                fc.refuel(100);
+            }
             paused = false;
         } catch (InvalidOperationException e) {
-            e.printStackTrace();
+            SwingUtilities.invokeLater(() -> statusLabel.setText(
+                    vehicle.getId() + ": Refuel failed - " + e.getMessage()));
         }
     }
 
-    public double getCurrentMileage(){return vehicle.getCurrentMilage();}
+    public double getCurrentMileage() {
+        return vehicle.getCurrentMilage();
+    }
 }
