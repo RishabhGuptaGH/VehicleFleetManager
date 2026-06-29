@@ -38,6 +38,9 @@ public class SimulatorGUI extends JFrame {
     private List<JLabel> vehicleLabels = new ArrayList<>();
     private List<JPanel> vehicleRows = new ArrayList<>();
 
+    private volatile boolean simulationRunning = false;
+    private volatile boolean simulationPaused = false;
+
     public SimulatorGUI() {
         setTitle("Fleet Highway Simulator");
         setSize(900, 700);
@@ -58,8 +61,18 @@ public class SimulatorGUI extends JFrame {
         stopBtn.addActionListener(e -> stopSimulation());
         refuelBtn.addActionListener(e -> refuelAll());
 
+        updateButtonStates();
+
         Timer timer = new Timer(100, e -> updateDisplay());
         timer.start();
+    }
+
+    private void updateButtonStates() {
+        startBtn.setEnabled(!simulationRunning);
+        pauseBtn.setEnabled(simulationRunning && !simulationPaused);
+        resumeBtn.setEnabled(simulationRunning && simulationPaused);
+        stopBtn.setEnabled(simulationRunning);
+        refuelBtn.setEnabled(simulationRunning);
     }
 
     private JPanel createTitlePanel() {
@@ -241,6 +254,16 @@ public class SimulatorGUI extends JFrame {
         SharedHighway.setSynchronizationEnabled(syncCheckBox.isSelected());
         SharedHighway.reset();
 
+        for (VehicleRunner runner : runners) {
+            runner.vehicle.setCurrentMilage(0);
+            if (runner.vehicle instanceof FuelConsumable fc) {
+                try {
+                    fc.refuel(100);
+                } catch (Exception ignored) {
+                }
+            }
+        }
+
         for (int i = 0; i < runners.size(); i++) {
             runners.set(i, new VehicleRunner(runners.get(i).vehicle, vehicleLabels.get(i)));
         }
@@ -251,7 +274,9 @@ public class SimulatorGUI extends JFrame {
             threads.add(t);
             t.start();
         }
-        startBtn.setEnabled(false);
+        simulationRunning = true;
+        simulationPaused = false;
+        updateButtonStates();
         statusLabel.setText("Status: Running");
         statusLabel.setForeground(Color.decode("#A6E3A1"));
     }
@@ -260,6 +285,8 @@ public class SimulatorGUI extends JFrame {
         for (VehicleRunner runner : runners) {
             runner.setPaused(true);
         }
+        simulationPaused = true;
+        updateButtonStates();
         statusLabel.setText("Status: Paused");
         statusLabel.setForeground(Color.decode("#F9E2AF"));
     }
@@ -268,6 +295,8 @@ public class SimulatorGUI extends JFrame {
         for (VehicleRunner runner : runners) {
             runner.setPaused(false);
         }
+        simulationPaused = false;
+        updateButtonStates();
         statusLabel.setText("Status: Running");
         statusLabel.setForeground(Color.decode("#A6E3A1"));
     }
@@ -276,7 +305,9 @@ public class SimulatorGUI extends JFrame {
         for (VehicleRunner runner : runners) {
             runner.stop();
         }
-        startBtn.setEnabled(true);
+        simulationRunning = false;
+        simulationPaused = false;
+        updateButtonStates();
         statusLabel.setText("Status: Stopped");
         statusLabel.setForeground(Color.decode("#F38BA8"));
     }
@@ -285,6 +316,8 @@ public class SimulatorGUI extends JFrame {
         for (VehicleRunner runner : runners) {
             runner.refuelVehicle();
         }
+        simulationPaused = false;
+        updateButtonStates();
         statusLabel.setText("Status: Refueled - Running");
         statusLabel.setForeground(Color.decode("#A6E3A1"));
     }
@@ -299,7 +332,6 @@ public class SimulatorGUI extends JFrame {
         }
         statusLabel.setText("Status: Ready");
         statusLabel.setForeground(Color.decode("#89B4FA"));
-        startBtn.setEnabled(true);
     }
 
     private void updateDisplay() {
